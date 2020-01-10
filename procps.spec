@@ -1,7 +1,7 @@
 Summary: System and process monitoring utilities
 Name: procps
 Version: 3.2.8
-Release: 45%{?dist}.1
+Release: 45%{?dist}.3
 License: GPLv2+ and LGPLv2+
 Group: Applications/System
 URL: http://procps.sourceforge.net
@@ -181,6 +181,7 @@ Patch94: procps-3.2.8-sysctl-conf-man-param-hint.patch
 Patch95: procps-3.2.8-sysctl-man-conf-override-hint.patch
 Patch96: procps-3.2.8-top-sigsegv-proc-inaccessible.patch
 Patch97: procps-3.2.8-ps-stime-buf-overflow.patch
+Patch98: procps-3.2.8-CVE-2018-1124.patch
 
 BuildRequires: ncurses-devel libselinux-devel
 
@@ -304,6 +305,7 @@ System and process monitoring utilities development headers
 %patch95 -p1
 %patch96 -p1
 %patch97 -p1
+%patch98 -p1
 
 cp %{SOURCE1} .
 cp %{SOURCE2} .
@@ -357,6 +359,14 @@ install -Dpm 644 readproctab.3 %{buildroot}/%{_mandir}/man3/readproctab.3
 %attr(0644,root,root) %{_mandir}/man3/*
 
 %changelog
+* Fri May 25 2018 Kamil Dudka <kdudka@redhat.com> - 3.2.8-45.el6_9.3
+- drop leftover assignment in fix for CVE-2018-1124 causing a severe regression
+- Resolves: CVE-2018-1124
+
+* Fri May 11 2018 Kamil Dudka <kdudka@redhat.com> - 3.2.8-45.el6_9.2
+- fix integer overflows leading to heap overflow in file2strvec()
+- Resolves: CVE-2018-1124 CVE-2018-1126
+
 * Tue Jun 13 2017 Jan Rybar <jrybar@redhat.com> - 3.2.8-45.el6_9.1
 - ps: STIME no longer 1970 if many cores in /proc/stat
 - Resolves: rhbz#1460176

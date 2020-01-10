@@ -1,7 +1,7 @@
 Summary: System and process monitoring utilities
 Name: procps
 Version: 3.2.8
-Release: 36%{?dist}
+Release: 45%{?dist}
 License: GPLv2+ and LGPLv2+
 Group: Applications/System
 URL: http://procps.sourceforge.net
@@ -175,6 +175,11 @@ Patch88: procps-3.2.8-ps-man-typo-cgroup-belongs.patch
 Patch89: procps-3.2.8-ps-thread-cgroups.patch
 #1288497 - pmap - no sums computed for RSS and Dirty column 
 Patch90: procps-3.2.8-pmap-32bit-layout-fix.patch
+Patch91: procps-3.2.8-ps-full-wchan-name.patch
+Patch93: procps-3.2.8-slabtop-usage-percent-int-overflow.patch
+Patch94: procps-3.2.8-sysctl-conf-man-param-hint.patch
+Patch95: procps-3.2.8-sysctl-man-conf-override-hint.patch
+Patch96: procps-3.2.8-top-sigsegv-proc-inaccessible.patch
 
 BuildRequires: ncurses-devel libselinux-devel
 
@@ -292,6 +297,11 @@ System and process monitoring utilities development headers
 %patch88 -p1
 %patch89 -p1
 %patch90 -p1
+%patch91 -p1
+%patch93 -p1
+%patch94 -p1
+%patch95 -p1
+%patch96 -p1
 
 cp %{SOURCE1} .
 cp %{SOURCE2} .
@@ -345,6 +355,42 @@ install -Dpm 644 readproctab.3 %{buildroot}/%{_mandir}/man3/readproctab.3
 %attr(0644,root,root) %{_mandir}/man3/*
 
 %changelog
+* Mon Dec 19 2016 Jan Rybar <jrybar@redhat.com> - 3.2.8-45
+- slabtop: additional work on usage computation to work on 32bit archs
+- Related: rhbz#1330008
+
+* Tue Nov 22 2016 Jan Rybar <jrybar@redhat.com> - 3.2.8-44
+- Removal of patch 92 - procps-3.2.8-pgrep-15-chars-warning.patch
+- Related: rhbz#877352
+
+* Wed Nov 16 2016 Jan Rybar <jrybar@redhat.com> - 3.2.8-43
+- Rework of patch 91 from 3.2.8-37, stripping removed permanently, no new option
+- Resolves: rhbz#1322111
+
+* Mon Oct 31 2016 Jan Rybar <jrybar@redhat.com> - 3.2.8-42
+- top: Termination with segfault if /proc becomes inaccessible during run
+- Resolves: rhbz#928724
+
+* Tue Oct 25 2016 Jan Rybar <jrybar@redhat.com> - 3.2.8-41
+- sysctl manpage: Added explanation of conf files precedence
+- Resolves: rhbz#1217077
+
+* Tue Oct 25 2016 Jan Rybar <jrybar@redhat.com> - 3.2.8-40
+- sysctl.conf manpage: new NOTES section with predefined vars hint
+- Resolves: rhbz#1318644
+
+* Mon Oct 10 2016 Jan Rybar <jrybar@redhat.com> - 3.2.8-39
+- slabtop: fixing incorrect usage percent computation - int overflow
+- Resolves: rhbz#1330008
+
+* Thu Sep 22 2016 Jan Rybar <jrybar@redhat.com> - 3.2.8-38
+- New warning if pattern exceeds 15 characters without -f option
+- Resolves: #877352
+
+* Mon Sep 05 2016 Jan Rybar <jrybar@redhat.com> - 3.2.8-37
+- Adding option to skip stripping of wchan name data
+- Resolves: #1322111
+
 * Wed Dec 16 2015 Jaromir Capik <jcapik@redhat.com> - 3.2.8-36
 - #1201024 - [RFE] Increase sysctl -p line size limit
 - #1246573 - typo in ps man page

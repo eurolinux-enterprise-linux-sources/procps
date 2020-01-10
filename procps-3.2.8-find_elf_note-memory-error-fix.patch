@@ -1,6 +1,6 @@
 diff -Naur procps-3.2.8.orig/proc/sysinfo.c procps-3.2.8/proc/sysinfo.c
---- procps-3.2.8.orig/proc/sysinfo.c	2015-03-03 15:13:40.000000000 +0100
-+++ procps-3.2.8/proc/sysinfo.c	2015-03-03 15:34:53.724000337 +0100
+--- procps-3.2.8.orig/proc/sysinfo.c	2015-12-16 13:50:19.000000000 +0100
++++ procps-3.2.8/proc/sysinfo.c	2015-12-16 14:10:34.026998832 +0100
 @@ -24,6 +24,9 @@
  #include <netinet/in.h>  /* htons */
  #endif
@@ -11,17 +11,12 @@ diff -Naur procps-3.2.8.orig/proc/sysinfo.c procps-3.2.8/proc/sysinfo.c
  long smp_num_cpus;     /* number of CPUs */
  
  #define BAD_OPEN_MESSAGE					\
-@@ -189,17 +192,52 @@
+@@ -189,17 +192,62 @@
  
  //extern char** environ;
  
 -/* for ELF executables, notes are pushed before environment and args */
 -static unsigned long find_elf_note(unsigned long findme){
--  unsigned long *ep = (unsigned long *)environ;
--  while(*ep++);
--  while(*ep){
--    if(ep[0]==findme) return ep[1];
--    ep+=2;
 +static unsigned long find_elf_note(unsigned long type)
 +{
 +  ElfW(auxv_t) auxv_struct;
@@ -29,13 +24,27 @@ diff -Naur procps-3.2.8.orig/proc/sysinfo.c procps-3.2.8/proc/sysinfo.c
 +  FILE *fd;
 +  int i;
 +  static ElfW(auxv_t) *auxv = NULL;
+   unsigned long *ep = (unsigned long *)environ;
+-  while(*ep++);
+-  while(*ep){
+-    if(ep[0]==findme) return ep[1];
+-    ep+=2;
 +
 +  if(!auxv) {
 +
 +    fd = fopen("/proc/self/auxv", "rb");
-+    if(!fd) {
-+      perror("/proc/self/auxv");
-+      exit(EXIT_FAILURE);
++
++    if(!fd) {  // can't open auxv? that could be caused by euid change
++               // ... and we need to fall back to the old and unsafe
++               // ... method that doesn't work when calling library
++               // ... functions with dlopen -> FIXME :(
++
++      while(*ep++);  // for ELF executables, notes are pushed
++      while(*ep){    // ... before environment and args
++        if(ep[0]==type) return ep[1];
++        ep+=2;
++      }
++      return NOTE_NOT_FOUND;
 +    }
 +
 +    auxv = (ElfW(auxv_t) *) malloc(getpagesize());

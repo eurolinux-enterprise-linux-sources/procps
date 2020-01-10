@@ -123,12 +123,12 @@ diff -Naur procps-3.2.8.orig/free.c procps-3.2.8/free.c
 +            printf("Low:    ");
 +            printf("%s ", S(kb_low_total));
 +            printf("%s ", S(kb_low_total - kb_low_free));
-+            printf("%s ", S(kb_low_free));
++            printf("%s" , S(kb_low_free));
 +            printf("\n");
 +            printf("High:   ");
 +            printf("%s ", S(kb_high_total));
 +            printf("%s ", S(kb_high_total - kb_high_free));
-+            printf("%s ", S(kb_high_free));
++            printf("%s" , S(kb_high_free));
 +            printf("\n");
          }
 -        if(!old_fmt){
@@ -141,7 +141,7 @@ diff -Naur procps-3.2.8.orig/free.c procps-3.2.8/free.c
 -            );
 +            printf("-/+ buffers/cache: ");
 +            printf("%s ", S(kb_main_used - buffers_plus_cached));
-+            printf("%s ", S(kb_main_free + buffers_plus_cached));
++            printf("%s" , S(kb_main_free + buffers_plus_cached));
 +            printf("\n");
          }
 -        printf(
@@ -160,13 +160,13 @@ diff -Naur procps-3.2.8.orig/free.c procps-3.2.8/free.c
 +        printf("Swap:   ");
 +        printf("%s ", S(kb_swap_total));
 +        printf("%s ", S(kb_swap_used));
-+        printf("%s ", S(kb_swap_free));
++        printf("%s" , S(kb_swap_free));
 +        printf("\n");
 +        if (show_total) {
 +            printf("Total:  ");
 +            printf("%s ", S(kb_main_total + kb_swap_total));
 +            printf("%s ", S(kb_main_used  + kb_swap_used));
-+            printf("%s ", S(kb_main_free  + kb_swap_free));
++            printf("%s" , S(kb_main_free  + kb_swap_free));
 +            printf("\n");
          }
          if(pause_length){

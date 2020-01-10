@@ -1,7 +1,7 @@
 Summary: System and process monitoring utilities
 Name: procps
 Version: 3.2.8
-Release: 35%{?dist}
+Release: 36%{?dist}
 License: GPLv2+ and LGPLv2+
 Group: Applications/System
 URL: http://procps.sourceforge.net
@@ -167,6 +167,14 @@ Patch84: procps-3.2.8-w-ip-addr.patch
 Patch85: procps-3.2.8-find_elf_note-memory-error-fix.patch
 #1262870 - pmap produces ludicrous output on shared memory using programs due to bogus parsing
 Patch86: procps-3.2.8-pmap-skip-vmflags.patch
+#1201024 - [RFE] Increase sysctl -p line size limit
+Patch87: procps-3.2.8-sysctl-linelen-4k.patch
+#1246573 - typo in ps man page
+Patch88: procps-3.2.8-ps-man-typo-cgroup-belongs.patch
+#1284076 - [RFE] Support for thread cgroups
+Patch89: procps-3.2.8-ps-thread-cgroups.patch
+#1288497 - pmap - no sums computed for RSS and Dirty column 
+Patch90: procps-3.2.8-pmap-32bit-layout-fix.patch
 
 BuildRequires: ncurses-devel libselinux-devel
 
@@ -280,6 +288,10 @@ System and process monitoring utilities development headers
 %patch84 -p1
 %patch85 -p1
 %patch86 -p1
+%patch87 -p1
+%patch88 -p1
+%patch89 -p1
+%patch90 -p1
 
 cp %{SOURCE1} .
 cp %{SOURCE2} .
@@ -333,6 +345,15 @@ install -Dpm 644 readproctab.3 %{buildroot}/%{_mandir}/man3/readproctab.3
 %attr(0644,root,root) %{_mandir}/man3/*
 
 %changelog
+* Wed Dec 16 2015 Jaromir Capik <jcapik@redhat.com> - 3.2.8-36
+- #1201024 - [RFE] Increase sysctl -p line size limit
+- #1246573 - typo in ps man page
+- #1251101 - Fixing human readable patch (removing trailing spaces)
+- #1284076 - [RFE] Support for thread cgroups
+- #1288208 - use of /proc/self/auxv breaks ps when running as a different euid
+- #1288497 - pmap - no sums computed for RSS and Dirty column
+- Resolves: #1201024 #1246573 #1251101 #1284076 #1288208 #1288497
+
 * Tue Nov 03 2015 Jaromir Capik <jcapik@redhat.com> - 3.2.8-35
 - #1262870 - Correctly skip vmflags (and other keys starting with A-Z)
 - Resolves: #1262870

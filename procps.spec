@@ -1,7 +1,7 @@
 Summary: System and process monitoring utilities
 Name: procps
 Version: 3.2.8
-Release: 45%{?dist}
+Release: 45%{?dist}.1
 License: GPLv2+ and LGPLv2+
 Group: Applications/System
 URL: http://procps.sourceforge.net
@@ -180,6 +180,7 @@ Patch93: procps-3.2.8-slabtop-usage-percent-int-overflow.patch
 Patch94: procps-3.2.8-sysctl-conf-man-param-hint.patch
 Patch95: procps-3.2.8-sysctl-man-conf-override-hint.patch
 Patch96: procps-3.2.8-top-sigsegv-proc-inaccessible.patch
+Patch97: procps-3.2.8-ps-stime-buf-overflow.patch
 
 BuildRequires: ncurses-devel libselinux-devel
 
@@ -302,6 +303,7 @@ System and process monitoring utilities development headers
 %patch94 -p1
 %patch95 -p1
 %patch96 -p1
+%patch97 -p1
 
 cp %{SOURCE1} .
 cp %{SOURCE2} .
@@ -355,6 +357,10 @@ install -Dpm 644 readproctab.3 %{buildroot}/%{_mandir}/man3/readproctab.3
 %attr(0644,root,root) %{_mandir}/man3/*
 
 %changelog
+* Tue Jun 13 2017 Jan Rybar <jrybar@redhat.com> - 3.2.8-45.el6_9.1
+- ps: STIME no longer 1970 if many cores in /proc/stat
+- Resolves: rhbz#1460176
+
 * Mon Dec 19 2016 Jan Rybar <jrybar@redhat.com> - 3.2.8-45
 - slabtop: additional work on usage computation to work on 32bit archs
 - Related: rhbz#1330008
